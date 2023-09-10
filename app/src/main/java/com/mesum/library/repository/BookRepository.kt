@@ -28,4 +28,19 @@ class BookRepository {
         }
     }
 
+    suspend fun searchBooksInit( ): BooksResult {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.searchBooksInit()
+                BooksResult.Success(response)
+
+            } catch (e : HttpException){
+                BooksResult.Error("Http error ${e.code()}")
+
+            }catch (e : IOException){
+                BooksResult.Error("IO Exception ${e.message.toString()}")
+            }
+        }
+    }
+
 }

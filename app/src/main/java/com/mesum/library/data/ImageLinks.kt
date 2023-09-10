@@ -2,5 +2,5 @@ package com.mesum.library.data
 
 data class ImageLinks(
     val smallThumbnail: String,
-    val thumbnail: String
+    val thumbnail: String? = null
 )

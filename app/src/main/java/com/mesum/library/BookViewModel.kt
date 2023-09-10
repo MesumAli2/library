@@ -17,13 +17,34 @@ class BookViewModel() : ViewModel() {
     private val _books : MutableStateFlow<List<Item>>  = MutableStateFlow(listOf())
     val books = _books.asStateFlow()
 
+    var searchedQuerryField : MutableStateFlow<String> = MutableStateFlow("")
     init {
-        searchBooks("a")
+        searchBooksInit()
     }
 
     fun searchBooks(query: String) {
+         searchedQuerryField.value = query
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.searchBooks(query)
+            when (result) {
+                is BooksResult.Success -> {
+                    // Handle the successful response (e.g., update UI)
+                    val books = result.books.items
+                    _books.value = books
+                    // Do something with the list of books
+                }
+                is BooksResult.Error -> {
+                    // Handle the error (e.g., show an error message)
+                    val errorMessage = result.errorMessage
+                }
+            }
+        }
+    }
+
+
+    private fun searchBooksInit() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.searchBooksInit()
             when (result) {
                 is BooksResult.Success -> {
                     // Handle the successful response (e.g., update UI)
