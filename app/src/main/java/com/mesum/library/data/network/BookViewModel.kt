@@ -1,10 +1,8 @@
-package com.mesum.library
+package com.mesum.library.data.network
 
-import android.app.appsearch.SearchResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mesum.library.data.BooksResult
-import com.mesum.library.data.Item
 import com.mesum.library.repository.BookRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +12,7 @@ import kotlinx.coroutines.launch
 class BookViewModel() : ViewModel() {
     private val repository: BookRepository = BookRepository()
 
-    private val _books : MutableStateFlow<List<Item>>  = MutableStateFlow(listOf())
+    private val _books : MutableStateFlow<List<Item?>>  = MutableStateFlow(listOf())
     val books = _books.asStateFlow()
 
     var searchedQuerryField : MutableStateFlow<String> = MutableStateFlow("")
@@ -30,7 +28,10 @@ class BookViewModel() : ViewModel() {
                 is BooksResult.Success -> {
                     // Handle the successful response (e.g., update UI)
                     val books = result.books.items
-                    _books.value = books
+                    if (books?.isNotEmpty() == true){
+                        _books.value = books
+
+                    }
                     // Do something with the list of books
                 }
                 is BooksResult.Error -> {
@@ -49,7 +50,10 @@ class BookViewModel() : ViewModel() {
                 is BooksResult.Success -> {
                     // Handle the successful response (e.g., update UI)
                     val books = result.books.items
-                    _books.value = books
+                    if (books?.isNotEmpty() == true){
+                        _books.value = books
+
+                    }
                     // Do something with the list of books
                 }
                 is BooksResult.Error -> {
